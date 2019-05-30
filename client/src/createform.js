@@ -1,11 +1,12 @@
 import React from 'react';
+import TypeMenu from './typemenu';
 
 export default class CreateForm extends React.Component{
     constructor(props){
         super(props);
         this.types = ['page','image','video'];
         this.state = {
-            type: this.types[0],
+            type: this.props.defaultType,
             url: ''
         };
     }
@@ -33,30 +34,13 @@ export default class CreateForm extends React.Component{
     render(){
         const {type,url} = this.state;
         return(
-            <div>
+            <div id="create-form" className="spaced-row">
                 <button onClick={this.handlePaste}>paste</button>
-                <input
-                    placeholder="new url"
-                    value={url}
-                    onChange={this.handleUrlChange}
-                />
-                <select
-                    onChange={this.handleTypeChange}
-                    value={type}
-                >
-                    {this.types.map(option => (
-                        <option
-                            key={option}
-                            value={option}
-                        >
-                            {option}
-                        </option>
-                    ))}
-                </select>
-                <button onClick={this.handleSubmit}>
-                    submit
-                </button>
+                <input placeholder="new url" value={url} onChange={this.handleUrlChange} />
+                <TypeMenu onChange={this.handleTypeChange} value={type} />
+                <button onClick={this.handleSubmit}>submit</button>
             </div>
         );
     }
 }
+

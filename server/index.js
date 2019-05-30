@@ -8,20 +8,30 @@ const Link = mongoose.model("Link", {
     type: String,
 });
 
+const Subject = mongoose.model("Subject", {
+    name: String,
+});
+
 const typeDefs = `
   type Query {
     hello(name: String): String!
     links: [Link]
+    subjects: [Subject]
   }
   type Link {
     id: ID!
     url: String!
     type: String!
   }
+  type Subject {
+    id: ID!
+    name: String!
+  }
   type Mutation {
     createLink(url: String!, type: String!): Link
-    changeLinkType(id: ID!, type: String): Boolean
+    changeLink(id: ID!, url: String!, type: String!): Boolean
     removeLink(id: ID!): Boolean
+    createSubject(name: String!): Subject
   }
 `;
 
@@ -29,6 +39,7 @@ const resolvers = {
   Query: {
     hello: (_, { name }) => `Hello ${name || 'World'}`,
     links: () => Link.find(),
+    subjects: () => Subject.find(),
   },
   Mutation: {
     createLink: async (_, {url, type}) => {
@@ -36,13 +47,18 @@ const resolvers = {
         await link.save();
         return link;
     },
-    changeLinkType: async (_, {id, type}) => {
-        await Link.findByIdAndUpdate(id, {type});
+    changeLink: async (_, {id, url, type}) => {
+        await Link.findByIdAndUpdate(id, {url,type});
         return true;
     },
     removeLink: async (_, {id}) => {
         await Link.findByIdAndRemove(id);
         return true;
+    },
+    createSubject: async (_, {name}) => {
+        const subject = new Subject({name});
+        await subject.save();
+        return subject;
     },
   }
 }

@@ -12,16 +12,98 @@ code {
     monospace;
 }
 
-#wrapper {
-    margin: 10px;
-}
-
 ul.form-list {
     margin: 0;
+    padding: 0;
     list-style-type: none;
 }
 
 ul.form-list li {
     margin-bottom: 5px;
+}
+
+#create-form {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.spaced-row {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.spaced-row > * {
+    margin-right: 5px;
+}
+
+button {
+    background-color: #78a;
+    color: white;
+    border-radius: 5px;
+    font-variant: small-caps;
+    outline: none;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #56c;
+}
+
+.link-listing button {
+    margin-right: 10px;
+}
+
+.link-listing span {
+    font-size: 12px;
+}
+
+.thumbnail {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.thumbnail img {
+    height: 100%;
+    width: auto;
+}
+
+.nav-wrapper {
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    padding: 10px 0;
+    width: 100%;
+}
+
+nav {
+    margin-left: 10px;
+    visibility: hidden;
+}
+
+.nav-wrapper:hover nav {
+    visibility: visible;
+}
+
+nav button {
+    margin-right: 5px;
+}
+
+.padded-content {
+    margin-top: 40px;
+    padding: 10px;
+}
+
+.image-view {
+    position: absolute;
+    top: 0;
+}
+
+#list-view label {
+    font-size: 12px;
 }
 
