@@ -6,6 +6,7 @@ import ListView from './listView';
 import GalleryView from './galleryView';
 import ImageView from './imageView';
 import SubjectsView from './subjectsView';
+import FilterForm from './filterForm';
 
 const ViewState = {list:0, edit:1, gallery:2, image:3, subjects:4};
 
@@ -15,6 +16,10 @@ const LinksQuery = gql`
             id
             url
             type
+            subjects {
+                id
+                name
+            }
         }
     }
 `;
@@ -48,8 +53,8 @@ const CreateSubjectMutation = gql`
 `;
 
 const UpdateLinkMutation = gql`
-    mutation($id: ID!, $url: String!, $type: String!){
-        changeLink(id: $id, url: $url, type: $type)
+    mutation($id: ID!, $url: String!, $type: String!, $subjects: [SubjectInput]){
+        changeLink(id: $id, url: $url, type: $type, subjects: $subjects)
     }
 `;
 
@@ -61,25 +66,37 @@ const RemoveLinkMutation = gql`
 
 
 class App extends Component {
-    state = {
-        view: ViewState.list,
-        imageSet: [],
-        selected: null,
-    };
+    constructor(props){
+        super(props);
+
+        console.log('props',this.props.params);
+
+        this.state = {
+            view: ViewState.list,
+            selected: null,
+            criteria: null,
+            filtered: null,
+        };
+    }
 
     createLink = async formData => {
         const url = formData.url;
         const type = formData.type;
+        const subjects = [];
         await this.props.createLink({
             variables: {
                 url,
-                type
+                type,
             },
             update: (store, { data: {createLink}})=>{
                 const data = store.readQuery({query: LinksQuery});
                 data.links.unshift(createLink);
                 store.writeQuery({query: LinksQuery, data});
             },
+            refetchQueries: [{
+                query: LinksQuery,
+                variables: {url,type,subjects}
+            }],
         });
     };
 
@@ -89,6 +106,7 @@ class App extends Component {
                 id: link.id,
                 url: link.url,
                 type: link.type,
+                subjects: link.subjects.map(s=>({id:s.id, name:s.name})),
             },
             update: store => {
                 const data = store.readQuery({query: LinksQuery});
@@ -97,12 +115,12 @@ class App extends Component {
                         ? {
                             ...link,
                             url: link.url,
-                            type: link.type
+                            type: link.type,
+                            subjects: link.subjects
                         }
                         : x
                 );
                 store.writeQuery({query: LinksQuery, data});
-                this.updateImageSet();
             }
         });
     };
@@ -114,9 +132,8 @@ class App extends Component {
             },
             update: store => {
                 const data = store.readQuery({query: LinksQuery});
-                this.props.data.links = data.links.filter(x => x.id !== link.id);
+                this.props.linksQuery.links = data.links.filter(x => x.id !== link.id);
                 store.writeQuery({query: LinksQuery, data});
-                this.updateImageSet();
             },
         });
     };
@@ -139,11 +156,11 @@ class App extends Component {
         this.setState({
             selected: link,
             view: ViewState.edit,
-        });
+        },this.applyCriteria);
     };
 
     handleClickList = event => {
-        this.setState({view: ViewState.list});
+        this.setState({view: ViewState.list},this.applyCriteria);
     };
 
     handleClickRemove = event => {
@@ -157,35 +174,80 @@ class App extends Component {
         this.handleClickList();
     };
 
-    handleNav = viewName => {
-        if(viewName === "next" || viewName === "prev"){
-            var index = this.state.imageSet.indexOf(this.state.selected);
-            if(viewName === "next"){
-                index++;
-                if(index === this.state.imageSet.length){ index = 0; }
-            }
-            else{
-                index--;
-                if(index < 0){ index = this.state.imageSet.length - 1; }
-            }
-            this.setState({selected: this.state.imageSet[index]});
-            return;
+    handleNav = btnText => {
+        var index;
+        var links = this.state.filtered || this.props.linksQuery.links;
+        switch(btnText){
+            case "next":
+                index = links.indexOf(this.state.selected) + 1;
+                if(index === links.length){ index = 0; }
+                this.setState({selected: links[index]});
+                break;
+            case "prev":
+                index = links.indexOf(this.state.selected) - 1;
+                if(index < 0){ index = links.length - 1; }
+                this.setState({selected: links[index]});
+                break;
+            default:
+                this.setState({view: ViewState[btnText]}, this.applyCriteria);
         }
-        this.setState({view: ViewState[viewName]});
-        if(viewName==="gallery"){ this.updateImageSet() }
     };
 
     handleGalleryClick = link => {
         this.setState({
             selected: link,
             view: ViewState.image,
-        });
+        }, this.applyCriteria);
     };
 
-    updateImageSet(){
-        this.setState({
-            imageSet: this.props.data.links.filter(x => x.type === "image")
-        });
+    handleAddLinkSubject = (subjectId) => {
+        var link = this.state.selected;
+        var subject = this.props.subjectsQuery.subjects.find(s=>s.id===subjectId);
+        link.subjects.push(subject);
+        this.changeLink(link);
+    };
+
+    handleRemoveLinkSubject = (subjectId) => {
+        var link = this.state.selected;
+        var subject = this.props.subjectsQuery.subjects.find(s=>s.id===subjectId);
+
+        //link.subjects.push(subject);
+        var index = link.subjects.indexOf(subject);
+        link.subjects.splice(index,1);
+
+        this.changeLink(link);
+    }
+
+    getPageMarkup(){
+        switch(this.state.view){
+            case ViewState.edit: return this.renderEdit();
+            case ViewState.gallery: return this.renderGallery();
+            case ViewState.image: return this.renderImage();
+            case ViewState.subjects: return this.renderSubjects();
+            default: return this.renderList();
+        }
+    }
+
+    applyCriteria = () => {
+        const criteria = this.state.criteria || {};
+        if(this.state.view === ViewState.image){
+            criteria.type = "image";
+        }
+        var links = this.props.linksQuery.links;
+        if(criteria.type){
+            links = links.filter(k=>k.type === criteria.type);
+        }
+        if(criteria.subject){
+            var subjectObj = this.props.subjectsQuery.subjects
+                .find(s => s.id === criteria.subject);
+            var subjectName = subjectObj.name;
+            links = links.filter(k=>(!!k.subjects.find(s => s.name === subjectName)));
+        }
+        this.setState({filtered: links});
+    }
+
+    handleFilter = criteria => {
+        this.setState({criteria: criteria}, this.applyCriteria);
     }
 
     render(){
@@ -193,23 +255,18 @@ class App extends Component {
             || this.props.subjectsQuery.loading;
 
         if(loading){ return null; }
-        var markup;
-        switch(this.state.view){
-            case ViewState.edit: markup = this.renderEdit(); break;
-            case ViewState.gallery: markup = this.renderGallery(); break;
-            case ViewState.image: markup = this.renderImage(); break;
-            case ViewState.subjects: markup = this.renderSubjects(); break;
-            default: markup = this.renderList();
-        }
+
+        var navClass = "";
         var navs = ["list","gallery","subjects"];
         if(this.state.view === ViewState.image){
             navs.push("prev");
             navs.push("next");
+            navClass = "image-view";
         }
         return (
             <div id="wrapper">
                 <div className="nav-wrapper">
-                    <nav>
+                    <nav className={navClass}>
                         {
                             navs.map(v => (
                                 <button onClick={()=>this.handleNav(v)} key={v}>
@@ -218,21 +275,36 @@ class App extends Component {
                             ))
                         }
                     </nav>
+                    {
+                        this.state.view === ViewState.image
+                        ? null
+                        :
+                        <FilterForm
+                            subjects={this.props.subjectsQuery.subjects}
+                            onChange={this.handleFilter}
+                            forceType={
+                                this.state.view === ViewState.gallery
+                                ? "image"
+                                : null
+                            }
+                        />
+                    }
                 </div>
                 <main>
-                    {markup}
+                    {this.getPageMarkup()}
                 </main>
             </div>
         );
     }
 
     renderList(){
-        const links = this.props.linksQuery.links;
+        var links = this.state.filtered || this.props.linksQuery.links;
         return (
             <ListView
                 links={links}
                 createLink={this.createLink}
                 handleClickEdit={this.handleClickEdit}
+                subjects={this.props.subjectsQuery.subjects}
             />
         );
     }
@@ -243,14 +315,18 @@ class App extends Component {
                 submit={this.handleEditSubmit}
                 link={this.state.selected}
                 remove={this.handleClickRemove}
+                subjects={this.props.subjectsQuery.subjects}
+                addSubject={this.handleAddLinkSubject}
+                removeSubject={this.handleRemoveLinkSubject}
             />
         );
     }
 
     renderGallery(){
+        var links = this.state.filtered || this.props.linksQuery.links;
         return (
             <GalleryView
-                links={this.state.imageSet}
+                links={links}
                 click={this.handleGalleryClick}
             />
         );

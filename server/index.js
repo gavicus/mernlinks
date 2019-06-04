@@ -3,13 +3,14 @@ const mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost/test");
 
+const Subject = mongoose.model("Subject", {
+    name: String,
+});
+
 const Link = mongoose.model("Link", {
     url: String,
     type: String,
-});
-
-const Subject = mongoose.model("Subject", {
-    name: String,
+    subjects: [Subject.schema],
 });
 
 const typeDefs = `
@@ -18,18 +19,29 @@ const typeDefs = `
     links: [Link]
     subjects: [Subject]
   }
-  type Link {
-    id: ID!
-    url: String!
-    type: String!
-  }
   type Subject {
     id: ID!
     name: String!
   }
+  input SubjectInput {
+    id: ID!
+    name: String!
+  }
+  type Link {
+    id: ID!
+    url: String!
+    type: String!
+    subjects: [Subject]
+  }
+  input LinkInput {
+    id: ID!
+    url: String!
+    type: String!
+    subjects: [SubjectInput]
+  }
   type Mutation {
     createLink(url: String!, type: String!): Link
-    changeLink(id: ID!, url: String!, type: String!): Boolean
+    changeLink(id: ID!, url: String!, type: String!, subjects: [SubjectInput]): Boolean
     removeLink(id: ID!): Boolean
     createSubject(name: String!): Subject
   }
@@ -47,8 +59,8 @@ const resolvers = {
         await link.save();
         return link;
     },
-    changeLink: async (_, {id, url, type}) => {
-        await Link.findByIdAndUpdate(id, {url,type});
+    changeLink: async (_, {id, url, type, subjects}) => {
+        await Link.findByIdAndUpdate(id, {url, type, subjects});
         return true;
     },
     removeLink: async (_, {id}) => {
@@ -58,7 +70,7 @@ const resolvers = {
     createSubject: async (_, {name}) => {
         const subject = new Subject({name});
         await subject.save();
-        return subject;
+        return link;
     },
   }
 }

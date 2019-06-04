@@ -8,7 +8,7 @@ export default class GalleryView extends React.Component {
 
     render(){
         return(
-            <div className="padded-content">
+            <div className="gallery-view padded-content">
             {this.props.links
                 .filter(link=>link.type==="image")
                 .map(link => 

@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 12px;
 }
 
 code {
@@ -22,21 +23,25 @@ ul.form-list li {
     margin-bottom: 5px;
 }
 
-#create-form {
-    padding: 10px;
+.little-form {
+    padding: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
     display: inline-block;
+    margin-bottom: 10px;
 }
 
 .spaced-row {
     display: flex;
     justify-content: flex-start;
-    margin-bottom: 10px;
 }
 
 .spaced-row > * {
     margin-right: 5px;
+}
+
+.spaced-row > *:last-child {
+    margin-right: 0;
 }
 
 button {
@@ -61,10 +66,15 @@ button:hover {
 }
 
 .thumbnail {
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
     overflow: hidden;
     display: inline-block;
+}
+
+.gallery-view .thumbnail {
+    width: 60px;
+    height: 60px;
 }
 
 .thumbnail img {
@@ -72,16 +82,23 @@ button:hover {
     width: auto;
 }
 
+nav {
+    margin-left: 10px;
+}
+
 .nav-wrapper {
-    position: absolute;
+    position: fixed;
     top: 0;
     z-index: 5;
     padding: 10px 0;
     width: 100%;
 }
 
-nav {
-    margin-left: 10px;
+.nav-wrapper > * {
+    display: inline-block;
+}
+
+nav.image-view {
     visibility: hidden;
 }
 
@@ -103,7 +120,24 @@ nav button {
     top: 0;
 }
 
-#list-view label {
+.list-view label {
     font-size: 12px;
+}
+
+div.column {
+    display: inline-block;
+}
+
+.little-form .form-title {
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.remove-subject-button {
+    cursor: pointer;
+}
+
+.remove-subject-button:hover {
+    font-weight: bold;
 }
 

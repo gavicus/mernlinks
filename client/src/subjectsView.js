@@ -8,7 +8,7 @@ export default class SubjectsView extends React.Component{
     subjectLine(subject){
         return(
             <div>
-                {subject.name} ({subject.id})
+                {subject.name}
             </div>
         );
     }

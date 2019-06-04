@@ -15,21 +15,24 @@ export default class ListView extends React.Component{
     }
 
     render(){
-        const links = this.props.links;
         return (
-            <div id="list-view" className="padded-content">
+            <div className="list-view padded-content">
                 <div>
                     <CreateForm submit={this.props.createLink} defaultType={"image"} />
                 </div>
                 <ul className="form-list">
-                {links.map(link => (
-                    <li className={"link-listing"} key={link.id}>
-                        <button onClick={() => this.props.handleClickEdit(link)}>
-                            edit
-                        </button>
-                        {this.linkDisplay(link)}
-                    </li>
-                ))}
+                {
+                    this.props.links
+                    ? this.props.links.map(link => (
+                        <li className={"link-listing"} key={link.id}>
+                            <button onClick={() => this.props.handleClickEdit(link)}>
+                                edit
+                            </button>
+                            {this.linkDisplay(link)}
+                        </li>
+                    ))
+                    : ""
+                }
                 </ul>
             </div>
         );
