@@ -92,11 +92,13 @@ export default class EditForm extends React.Component{
                         <ul className="form-list">
                         {link.subjects.map(s=>(
                             <li key={s.id}>
-                                <span
-                                    className={"remove-subject-button"}
-                                    onClick={()=>this.removeSubject(s.id)}
-                                >X&nbsp;</span>
-                                {s.name}
+                                <div className="subject-entry">
+                                    <span
+                                        className={"remove-subject-button"}
+                                        onClick={()=>this.removeSubject(s.id)}
+                                    >X&nbsp;</span>
+                                    <span className="subject-name">{s.name}</span>
+                                </div>
                             </li>
                         ))}
                         </ul>

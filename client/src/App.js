@@ -177,20 +177,34 @@ class App extends Component {
     handleNav = btnText => {
         var index;
         var links = this.state.filtered || this.props.linksQuery.links;
-        switch(btnText){
-            case "next":
-                index = links.indexOf(this.state.selected) + 1;
-                if(index === links.length){ index = 0; }
-                this.setState({selected: links[index]});
-                break;
-            case "prev":
-                index = links.indexOf(this.state.selected) - 1;
-                if(index < 0){ index = links.length - 1; }
-                this.setState({selected: links[index]});
-                break;
-            default:
-                this.setState({view: ViewState[btnText]}, this.applyCriteria);
+        if(btnText === "next"){
+            index = links.indexOf(this.state.selected) + 1;
+            if(index === links.length){ index = 0; }
+            this.setState({selected: links[index]});
+            return;
         }
+        if(btnText === "prev"){
+            index = links.indexOf(this.state.selected) - 1;
+            if(index < 0){ index = links.length - 1; }
+            this.setState({selected: links[index]});
+            return;
+        }
+        if(btnText.startsWith("subject:")){
+            var subjectName = btnText.split(": ")[1];
+            var subjectObj = this.props.subjectsQuery.subjects.find(
+                s => s.name === subjectName
+            );
+            var criteria = {
+                subject: subjectObj.id,
+                type: "image",
+            };
+            this.setState({
+                view: ViewState.gallery,
+                criteria: criteria,
+            }, this.applyCriteria);
+            return;
+        }
+        this.setState({view: ViewState[btnText]}, this.applyCriteria);
     };
 
     handleGalleryClick = link => {
@@ -202,6 +216,7 @@ class App extends Component {
 
     handleAddLinkSubject = (subjectId) => {
         var link = this.state.selected;
+        if(!link.subjects){ link.subjects = []; }
         var subject = this.props.subjectsQuery.subjects.find(s=>s.id===subjectId);
         link.subjects.push(subject);
         this.changeLink(link);
@@ -261,6 +276,10 @@ class App extends Component {
         if(this.state.view === ViewState.image){
             navs.push("prev");
             navs.push("next");
+            var subjects = this.state.selected.subjects;
+            for(var s of subjects){
+                navs.push("subject: " + s.name);
+            }
             navClass = "image-view";
         }
         return (
@@ -282,6 +301,7 @@ class App extends Component {
                         <FilterForm
                             subjects={this.props.subjectsQuery.subjects}
                             onChange={this.handleFilter}
+                            criteria={this.state.criteria}
                             forceType={
                                 this.state.view === ViewState.gallery
                                 ? "image"

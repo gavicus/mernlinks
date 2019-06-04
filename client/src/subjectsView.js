@@ -7,8 +7,8 @@ export default class SubjectsView extends React.Component{
 
     subjectLine(subject){
         return(
-            <div>
-                {subject.name}
+            <div className="subject-entry">
+                <span className="subject-name">{subject.name}</span>
             </div>
         );
     }
@@ -24,7 +24,8 @@ export default class SubjectsView extends React.Component{
     }
 
     render(){
-        const subjects = this.props.subjects;
+        var subjects = this.props.subjects;
+        subjects.sort((a,b)=>{ return ('' + a.name).localeCompare(b.name); });
         return(
             <div id="subjects-view" className="padded-content">
                 <input

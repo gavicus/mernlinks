@@ -3,12 +3,21 @@ import TypeMenu from './typemenu';
 import SubjectMenu from './subjectMenu';
 
 export default class FilterForm extends React.Component {
-    state = {
-        subject: this.props.subjects[0].id,
-        type: "image",
-        do_subject: false,
-        do_type: (!!this.props.forceType),
-    };
+    constructor(props){
+        super(props);
+        var subject = this.props.subjects[0].id;
+        var type = "image";
+        var do_subject = false;
+        var do_type = (!!this.props.forceType);
+        if(this.props.criteria){
+            subject = this.props.criteria.subject || subject;
+            type = this.props.criteria.type || type;
+            do_subject = (!!this.props.criteria.subject);
+        }
+        this.state = {
+            subject: subject, type: type, do_subject: do_subject, do_type: do_type,
+        };
+    }
 
     getCriteria(){
         var c = {};
