@@ -1,6 +1,15 @@
 import React from 'react';
 import TypeMenu from './typemenu';
 
+/*
+props:
+    title: string
+    submit: function
+    defaultType: string
+    placeholder: string
+    hideType: boolean
+*/
+
 export default class CreateForm extends React.Component{
     constructor(props){
         super(props);
@@ -33,15 +42,20 @@ export default class CreateForm extends React.Component{
 
     render(){
         const {type,url} = this.state;
+        const placeholder = this.props.placeholder || "new url";
         return(
             <div className="little-form">
                 <div className="form-title">
-                    create new link
+                    {this.props.title || "create new link"}
                 </div>
                 <div className="spaced-row">
                     <button onClick={this.handlePaste}>paste</button>
-                    <input placeholder="new url" value={url} onChange={this.handleUrlChange} />
-                    <TypeMenu onChange={this.handleTypeChange} value={type} />
+                    <input placeholder={placeholder} value={url} onChange={this.handleUrlChange} />
+                    {
+                        this.props.hideType
+                        ? null
+                        : <TypeMenu onChange={this.handleTypeChange} value={type} />
+                    }
                     <button onClick={this.handleSubmit}>submit</button>
                 </div>
             </div>

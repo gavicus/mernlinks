@@ -74,9 +74,29 @@ button:hover {
     display: inline-block;
 }
 
-.gallery-view .thumbnail {
+.wide-thumb {
+    display: inline-block;
+}
+
+.wide-thumb img {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.gallery-wrapper {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+}
+
+.gallery-wrapper .thumbnail {
     width: 60px;
     height: 60px;
+}
+
+.gallery-column {
+    flex: 1 1 0;
+    margin-top: 10px;
 }
 
 .thumbnail img {
@@ -155,6 +175,42 @@ div.column {
     padding: 1px 3px;
     margin: 1px;
     display: inline-block;
+    cursor: pointer;
+}
+
+.subject-thumbnail {
+    border: 1px solid gray;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+    margin: 0 5px 5px 0;
+    overflow: hidden;
+}
+
+.subject-thumbnail .subject-thumb {
+    border: 1px solid #ddd;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+}
+
+.subject-thumbnail .subject-thumb img{
+    max-width: 90px;
+    max-height: 90px;
+}
+
+.subject-thumbnail .subject-name {
+    border: 1px solid #ddd;
+    width: 58px;
+    height: 30px;
+    padding: 1px;
+    word-wrap: break-word;
+    display: flex;
+}
+
+.subject-view {
+    margin-top: 60px;
+    padding: 10px;
 }
 
 .remove-subject-button {
@@ -167,5 +223,10 @@ div.column {
 
 .subject-name {
     color: black;
+}
+
+img.small-view {
+    max-width: 100px;
+    max-height: 100px;
 }
 

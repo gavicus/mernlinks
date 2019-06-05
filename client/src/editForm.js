@@ -1,40 +1,48 @@
 import React from 'react';
 import TypeMenu from './typemenu';
 import SubjectMenu from './subjectMenu';
+import CreateForm from './createform';
 
 export default class EditForm extends React.Component{
     constructor(props){
         super(props);
-        this.state = { subjectToAdd: this.props.subjects[0].id };
+        this.state = {
+            link: this.props.link,
+            subjectToAdd: this.props.subjects[0].id,
+        };
     }
 
     handleUrlChange = event => {
-        this.props.link.url = event.target.value;
-    }
+        var link = this.state.link;
+        link.url = event.target.value;
+        this.setState({link: link});
+    };
 
     handleTypeChange = event => {
         this.props.link.type = event.target.value;
-    }
-
-    handleAddSubjectChange = event => {
-    }
-
-    handleAddSubjectKeyDown = event => {
-    }
+    };
 
     handleSubjectChange = event => {
         this.setState({subjectToAdd: event.target.value});
-    }
+    };
 
     handleSubjectMenuChange = event => {
         this.setState({subjectToAdd: event});
-    }
+    };
 
     handleClickAddSubject = event => {
         if(this.state.subjectToAdd){
             this.props.addSubject(this.state.subjectToAdd);
             this.forceUpdate();
         }
+    }
+
+    handleAddThumb = event => {
+        this.props.link.thumburl = event.url;
+    }
+
+    handleSubmit = event => {
+        this.props.submit(this.state.link)
     }
 
     removeSubject = subjectId => {
@@ -56,23 +64,37 @@ export default class EditForm extends React.Component{
     }
 
     render(){
-        const link = this.props.link;
-
         return (
             <div className="padded-content">
                 <section>
                     <ul className="form-list">
-                        <li>id: {link.id}</li>
+                        <li>id: {this.props.link.id}</li>
                         <li>
                             <label>url
                                 <input
+                                    style={{width:'100%'}}
                                     onChange={this.handleUrlChange}
-                                    value={link.url}
+                                    value={this.state.link.url}
                                 />
                             </label>
                         </li>
-                        <li><TypeMenu onChange={this.handleTypeChange} value={link.type} /></li>
-                        <li><button onClick={()=>this.props.submit(link)}>submit</button></li>
+                        <li><TypeMenu onChange={this.handleTypeChange} value={this.props.link.type} /></li>
+                        <li>
+                            {
+                                this.props.link.thumburl
+                                ?
+                                <img alt="link thumbnail" className="thumbnail" src={this.props.link.thumburl} />
+                                : null
+                            }
+                            <CreateForm
+                                title="thumbnail image"
+                                placeholder="thumb url"
+                                defaultType="image"
+                                hideType={true}
+                                submit={this.handleAddThumb}
+                            />
+                        </li>
+                        <li><button onClick={this.handleSubmit}>submit</button></li>
                         <li><button onClick={()=>this.props.remove()}>remove</button></li>
                     </ul>
                 </section>
@@ -86,11 +108,11 @@ export default class EditForm extends React.Component{
                         <button onClick={this.handleClickAddSubject}>add subject</button>
                     </div>
                 {
-                    link.subjects && link.subjects.length > 0
+                    this.props.link.subjects && this.props.link.subjects.length > 0
                     ? <div>
                         <p>subjects:</p>
                         <ul className="form-list">
-                        {link.subjects.map(s=>(
+                        {this.props.link.subjects.map(s=>(
                             <li key={s.id}>
                                 <div className="subject-entry">
                                     <span
@@ -107,8 +129,8 @@ export default class EditForm extends React.Component{
                 }
                 </section>
                 {
-                    link.type === "image"
-                    ? <div><img alt="fullview" src={link.url} /></div>
+                    this.props.link.type === "image"
+                    ? <div><img className="small-view" alt="small view" src={this.props.link.url} /></div>
                     : null
                 }
             </div>

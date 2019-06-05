@@ -5,14 +5,6 @@ export default class SubjectsView extends React.Component{
         newSubjectName: '',
     };
 
-    subjectLine(subject){
-        return(
-            <div className="subject-entry">
-                <span className="subject-name">{subject.name}</span>
-            </div>
-        );
-    }
-
     handleInput = event => {
         this.setState({newSubjectName: event.target.value});
     }
@@ -34,11 +26,27 @@ export default class SubjectsView extends React.Component{
                     onKeyDown={this.handleKeyDown}
                     onChange={this.handleInput}
                 />
-                <ul className="form-list">
+                <div>
                     {subjects.map(subject => (
-                        <li key={subject.id}> {this.subjectLine(subject)} </li>
+                            <div
+                                key={subject.id}
+                                onClick={()=>this.props.onClick(subject.id)}
+                                className="subject-thumbnail"
+                            >
+                                <div className="subject-thumb">
+                                    {
+                                    subject.thumburl
+                                    ? <img
+                                        src={subject.thumburl}
+                                        alt="subject thumbnail"
+                                      />
+                                    : null
+                                    }
+                                </div>
+                                <div className="subject-name">{subject.name}</div>
+                            </div>
                     ))}
-                </ul>
+                </div>
             </div>
         );
     }

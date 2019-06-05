@@ -6,9 +6,10 @@ import ListView from './listView';
 import GalleryView from './galleryView';
 import ImageView from './imageView';
 import SubjectsView from './subjectsView';
+import SubjectView from './subjectView';
 import FilterForm from './filterForm';
 
-const ViewState = {list:0, edit:1, gallery:2, image:3, subjects:4};
+const ViewState = {list:0, edit:1, gallery:2, image:3, subjects:4, subject:5};
 
 const LinksQuery = gql`
     {
@@ -20,6 +21,7 @@ const LinksQuery = gql`
                 id
                 name
             }
+            thumburl
         }
     }
 `;
@@ -29,6 +31,7 @@ const SubjectsQuery = gql`
         subjects {
             id
             name
+            thumburl
         }
     }
 `;
@@ -53,8 +56,14 @@ const CreateSubjectMutation = gql`
 `;
 
 const UpdateLinkMutation = gql`
-    mutation($id: ID!, $url: String!, $type: String!, $subjects: [SubjectInput]){
-        changeLink(id: $id, url: $url, type: $type, subjects: $subjects)
+    mutation($id: ID!, $url: String!, $type: String!, $subjects: [SubjectInput], $thumburl: String){
+        changeLink(id: $id, url: $url, type: $type, subjects: $subjects, thumburl: $thumburl)
+    }
+`;
+
+const UpdateSubjectMutation = gql`
+    mutation($id: ID!, $name: String!, $thumburl: String){
+        changeSubject(id: $id, name: $name, thumburl: $thumburl)
     }
 `;
 
@@ -68,9 +77,6 @@ const RemoveLinkMutation = gql`
 class App extends Component {
     constructor(props){
         super(props);
-
-        console.log('props',this.props.params);
-
         this.state = {
             view: ViewState.list,
             selected: null,
@@ -107,6 +113,7 @@ class App extends Component {
                 url: link.url,
                 type: link.type,
                 subjects: link.subjects.map(s=>({id:s.id, name:s.name})),
+                thumburl: link.thumburl,
             },
             update: store => {
                 const data = store.readQuery({query: LinksQuery});
@@ -116,11 +123,35 @@ class App extends Component {
                             ...link,
                             url: link.url,
                             type: link.type,
-                            subjects: link.subjects
+                            subjects: link.subjects,
+                            thumburl: link.thumburl,
                         }
                         : x
                 );
                 store.writeQuery({query: LinksQuery, data});
+            }
+        });
+    };
+
+    changeSubject = async subject => {
+        await this.props.changeSubject({
+            variables: {
+                id: subject.id,
+                name: subject.name,
+                thumburl: subject.thumburl,
+            },
+            update: store => {
+                const data = store.readQuery({query: SubjectsQuery});
+                data.subjects = data.subjects.map(
+                    x => x.id === subject.id
+                        ? {
+                            ...subject,
+                            name: subject.name,
+                            thumburl: subject.thumburl,
+                        }
+                        : x
+                );
+                store.writeQuery({query: SubjectsQuery, data});
             }
         });
     };
@@ -239,6 +270,7 @@ class App extends Component {
             case ViewState.gallery: return this.renderGallery();
             case ViewState.image: return this.renderImage();
             case ViewState.subjects: return this.renderSubjects();
+            case ViewState.subject: return this.renderSubject();
             default: return this.renderList();
         }
     }
@@ -302,11 +334,6 @@ class App extends Component {
                             subjects={this.props.subjectsQuery.subjects}
                             onChange={this.handleFilter}
                             criteria={this.state.criteria}
-                            forceType={
-                                this.state.view === ViewState.gallery
-                                ? "image"
-                                : null
-                            }
                         />
                     }
                 </div>
@@ -366,9 +393,34 @@ class App extends Component {
             <SubjectsView
                 subjects={subjects}
                 createSubject={this.createSubject}
+                onClick={this.handleClickSubject}
             />
         );
     }
+
+    renderSubject(){
+        return (
+            <SubjectView
+                subject={this.state.selected}
+                submit={this.handleSubjectEditSubmit}
+            />
+        );
+    }
+
+    handleSubjectEditSubmit = subject => {
+        this.changeSubject(subject);
+        this.handleClickList();
+    };
+
+    handleClickSubject = subjectId => {
+        console.log('handleClickSubject',subjectId);
+        var subject = this.props.subjectsQuery.subjects
+            .find(s => s.id === subjectId);
+        this.setState({
+            selected: subject,
+            view: ViewState.subject,
+        });
+    };
 
 }
 
@@ -378,6 +430,7 @@ export default compose(
     graphql(RemoveLinkMutation, {name: "removeLink"}),
     graphql(CreateSubjectMutation, {name: "createSubject"}),
     graphql(SubjectsQuery, {name: "subjectsQuery"}),
+    graphql(UpdateSubjectMutation, {name: "changeSubject"}),
     graphql(LinksQuery, {name: "linksQuery"}),
 )(App);
 
