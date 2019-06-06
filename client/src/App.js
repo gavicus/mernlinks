@@ -208,6 +208,10 @@ class App extends Component {
     handleNav = btnText => {
         var index;
         var links = this.state.filtered || this.props.linksQuery.links;
+        if(btnText === "edit"){
+            this.handleClickEdit(this.state.selected);
+            return;
+        }
         if(btnText === "next"){
             index = links.indexOf(this.state.selected) + 1;
             if(index === links.length){ index = 0; }
@@ -225,16 +229,18 @@ class App extends Component {
             var subjectObj = this.props.subjectsQuery.subjects.find(
                 s => s.name === subjectName
             );
-            var criteria = {
-                subject: subjectObj.id,
-                type: "image",
-            };
-            this.setState({
-                view: ViewState.gallery,
-                criteria: criteria,
-            }, this.applyCriteria);
+            //var criteria = {
+            //    subject: subjectObj.id,
+            //    type: "image",
+            //};
+            //this.setState({
+            //    view: ViewState.gallery,
+            //    criteria: criteria,
+            //}, this.applyCriteria);
+            this.handleClickSubject(subjectObj.id);
             return;
         }
+        this.setState({ criteria:{} }, this.applyCriteria);
         this.setState({view: ViewState[btnText]}, this.applyCriteria);
     };
 
@@ -308,6 +314,7 @@ class App extends Component {
         if(this.state.view === ViewState.image){
             navs.push("prev");
             navs.push("next");
+            navs.push("edit");
             var subjects = this.state.selected.subjects;
             for(var s of subjects){
                 navs.push("subject: " + s.name);
@@ -399,10 +406,13 @@ class App extends Component {
     }
 
     renderSubject(){
+        var links = this.state.filtered || this.props.linksQuery.links;
         return (
             <SubjectView
+                links={links}
                 subject={this.state.selected}
                 submit={this.handleSubjectEditSubmit}
+                click={this.handleGalleryClick}
             />
         );
     }
@@ -416,10 +426,14 @@ class App extends Component {
         console.log('handleClickSubject',subjectId);
         var subject = this.props.subjectsQuery.subjects
             .find(s => s.id === subjectId);
+        var criteria = {
+            subject: subject.id,
+        };
         this.setState({
+            criteria: criteria,
             selected: subject,
             view: ViewState.subject,
-        });
+        }, this.applyCriteria);
     };
 
 }

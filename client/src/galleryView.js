@@ -3,6 +3,11 @@ import ImageGallery from './imageGallery';
 import PageGallery from './pageGallery';
 import VideoGallery from './videoGallery';
 
+/*
+links [Link]
+click callback function
+*/
+
 export default class GalleryView extends React.Component {
     constructor(props){
         super(props);

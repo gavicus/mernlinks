@@ -1,10 +1,16 @@
 import React from 'react';
 import CreateForm from './createform';
+import GalleryView from './galleryView';
 
 export default class SubjectView extends React.Component {
-    state = {
-        subject: this.props.subject,
-    };
+    constructor(props){
+        super(props);
+        //var subjectName = this.props.subject.name;
+        //var links = this.props.links.filter(k=>(!!k.subjects.find(s => s.name === subjectName)));
+        this.state = {
+            subject: this.props.subject,
+        };
+    }
 
     handleSubmit = event => {
         this.props.submit(this.state.subject);
@@ -20,6 +26,10 @@ export default class SubjectView extends React.Component {
         var subject = this.state.subject;
         subject.name = event.target.value;
         this.setState({subject: subject});
+    };
+
+    handleImageClick = event => {
+        this.props.click(event);
     };
 
     render(){
@@ -51,6 +61,10 @@ export default class SubjectView extends React.Component {
                     />
                 </div>
                 <button onClick={this.handleSubmit}>submit</button>
+                <GalleryView
+                    links={this.props.links}
+                    click={this.handleImageClick}
+                />
             </div>
         );
     }
