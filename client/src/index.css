@@ -72,6 +72,7 @@ button:hover {
     height: 30px;
     overflow: hidden;
     display: inline-block;
+    margin-bottom: -3px;
 }
 
 .wide-thumb {
@@ -84,7 +85,7 @@ button:hover {
 }
 
 .gallery-wrapper {
-    margin-top: 80px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
 }
@@ -97,6 +98,20 @@ button:hover {
 .gallery-column {
     flex: 1 1 0;
     margin-top: 10px;
+}
+
+.gallery-title {
+    padding: 3px;
+    background-color: gray;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.gallery-content {
+    margin: 10px 0;
 }
 
 .thumbnail img {
@@ -144,6 +159,15 @@ nav button {
     height: 100%;
 }
 
+.image-view .toggle-plate {
+    width: 60%;
+    height: 60%;
+    cursor: pointer;
+    position: absolute;
+    top: 80px;
+    left: 20%;
+}
+
 .image-view img.fit-screen {
     max-width: 100%;
     max-height: 100%;
@@ -163,13 +187,16 @@ nav button {
     right: 0px;
 }
 .image-view .image-nav div {
-    padding: 80px 10px;
+    padding: 40px 10px;
+    font-size: 14px;
     font-weight: bold;
-    color: #444;
+    color: white;
     visibility: hidden;
     height: 100%;
     width: 100%;
     background-color: rgba(200,200,200,0.5);
+    border-left: 1px solid rgba(255,255,255,0.5);
+    border-right: 1px solid rgba(255,255,255,0.5);
 }
 .image-view .image-nav:hover div {
     visibility: visible;
@@ -242,7 +269,7 @@ div.column {
 }
 
 .subject-view {
-    margin-top: 60px;
+    margin-top: 30px;
     padding: 10px;
 }
 
@@ -261,5 +288,15 @@ div.column {
 img.small-view {
     max-width: 100px;
     max-height: 100px;
+}
+
+.vid-edit-btn {
+    position: relative;
+    top: -6px;
+    left: -39px;
+    visibility: hidden;
+}
+.wide-thumb:hover .vid-edit-btn {
+    visibility: visible;
 }
 
