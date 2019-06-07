@@ -13,25 +13,15 @@ props:
 
 export default class Navigation extends React.Component {
     render(){
-        console.log('this.props',this.props);
-
-        //var pageName = this.props.match.url.split("/")[1];
-
-        //console.log('pageName',pageName);
-
         var navs = ["list","gallery","subjects"];
         if(this.props.view === this.props.states.image){
-            navs.push("prev");
-            navs.push("next");
             navs.push("edit");
-            //var subjects = this.props.selected.subjects;
-            //for(var s of subjects){
-            //    navs.push("subject: " + s.name);
-            //}
-            //navClass = "image-view";
+            var subjects = this.props.selected.subjects;
+            for(var s of subjects){
+                navs.push("subject: " + s.name);
+            }
+            navClass = "image-view";
         }
-
-        console.log('imageview',this.props.isImageView);
 
         return (
             <div id="wrapper">
@@ -45,8 +35,6 @@ export default class Navigation extends React.Component {
                     this.props.isImageView
                     ?
                     <span>
-                        <button onClick={()=>this.props.callback({command:"prev"})}>{"<"}</button>
-                        <button onClick={()=>this.props.callback({command:"next"})}>{">"}</button>
                         <button onClick={()=>this.props.callback({command:"edit"})}>edit</button>
                     </span>
                     :

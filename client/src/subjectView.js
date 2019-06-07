@@ -5,8 +5,6 @@ import GalleryView from './galleryView';
 export default class SubjectView extends React.Component {
     constructor(props){
         super(props);
-        //var subjectName = this.props.subject.name;
-        //var links = this.props.links.filter(k=>(!!k.subjects.find(s => s.name === subjectName)));
         this.state = {
             subject: this.props.subject,
         };
@@ -32,38 +30,62 @@ export default class SubjectView extends React.Component {
         this.props.click(event);
     };
 
+    handleClickEdit = link => {
+        this.props.handleClickEdit(link);
+    };
+
     render(){
         return (
             <div className="subject-view">
-                <div>{this.state.subject.name}</div>
+                <div>
+                    {
+                        this.state.subject
+                        ? this.state.subject.name
+                        : "no subject"
+                    }
+                </div>
+                    
+                {
+                this.props.subject
+                ?
                 <input
                     type="text"
                     value={this.state.subject.name}
                     onChange={this.handleNameChange}
                 />
-                <div>
-                    {
-                        this.state.subject.thumburl
+                : null
+                }
+
+                {
+                    this.props.subject
+                    ?
+                    <div>
+                        {
+                        this.props.subject.thumburl
                         ?
                         <img
                             alt="link thumbnail"
                             className="thumbnail"
                             src={this.state.subject.thumburl}
                         />
-                        : null
-                    }
-                    <CreateForm
-                        title="thumbnail image"
-                        placeholder="thumb url"
-                        defaultType="image"
-                        hideType={true}
-                        submit={this.handleAddThumb}
-                    />
-                </div>
-                <button onClick={this.handleSubmit}>submit</button>
+                        :null
+                        }
+                        <CreateForm
+                            title="thumbnail image"
+                            placeholder="thumb url"
+                            defaultType="image"
+                            hideType={true}
+                            submit={this.handleAddThumb}
+                        />
+                        <button onClick={this.handleSubmit}>submit</button>
+                    </div>
+                    : null
+                }
+
                 <GalleryView
                     links={this.props.links}
                     click={this.handleImageClick}
+                    clickEdit={this.handleClickEdit}
                 />
             </div>
         );

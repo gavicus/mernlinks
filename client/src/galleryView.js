@@ -14,6 +14,11 @@ export default class GalleryView extends React.Component {
         this.state = { criteria: null, };
     }
 
+    clickEdit = link => {
+        console.log('galleryView clickEdit');
+        this.props.clickEdit(link);
+    };
+
     render(){
         return(
             <div className="gallery-wrapper">
@@ -22,6 +27,7 @@ export default class GalleryView extends React.Component {
                 />
                 <VideoGallery
                     links={this.props.links}
+                    clickEdit={this.clickEdit}
                 />
                 <ImageGallery
                     links={this.props.links}

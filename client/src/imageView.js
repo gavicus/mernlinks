@@ -17,12 +17,18 @@ export default class ImageView extends React.Component {
 
     render(){
         return(
-            <div className={"image-view"} onClick={this.handleClick}>
+            <div className={"image-view"}>
                 <img
                     className={this.state.fitScreen?"fit-screen":""}
                     alt="fullview"
                     src={this.props.link.url}
                 />
+
+                <div
+                    className="toggle-plate"
+                    onClick={this.handleClick}
+                ></div>
+
                 <div className="image-nav prev">
                     <div onClick={()=>this.props.next(-1)}>prev</div>
                 </div>

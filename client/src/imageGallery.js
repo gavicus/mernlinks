@@ -1,6 +1,14 @@
 import React from 'react';
 
 export default class ImageGallery extends React.Component {
+    state={
+        visible: true,
+    };
+
+    toggleContent = () => {
+        this.setState({visible:!this.state.visible});
+    };
+
     render(){
         const links = this.props.links.filter(link=>link.type==="image");
         return(
@@ -8,7 +16,11 @@ export default class ImageGallery extends React.Component {
             ? ''
             :
             <div className="gallery-column">
-            <div>images</div>
+            <div className="gallery-title" onClick={this.toggleContent}>image</div><br/>
+            <div
+                className="gallery-content"
+                style={{ display: this.state.visible ? "inline-block" : "none" }}
+            >
             {links.map(link => 
                 <div
                     key={link.id}
@@ -18,6 +30,7 @@ export default class ImageGallery extends React.Component {
                     <img src={link.url} alt="thumb"/>
                 </div>
             )}
+            </div>
             </div>
         );
     }
