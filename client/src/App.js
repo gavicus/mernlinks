@@ -325,13 +325,13 @@ class App extends Component {
             <div id="wrapper">
                 <div className="nav-wrapper">
                     <nav className={navClass}>
-                        {
-                            navs.map(v => (
-                                <button onClick={()=>this.handleNav(v)} key={v}>
-                                    {v}
-                                </button>
-                            ))
-                        }
+                    {
+                        navs.map(v => (
+                            <button onClick={()=>this.handleNav(v)} key={v}>
+                                {v}
+                            </button>
+                        ))
+                    }
                     </nav>
                     {
                         this.state.view === ViewState.image
@@ -390,6 +390,7 @@ class App extends Component {
         return (
             <ImageView
                 link={this.state.selected}
+                next={this.handleNextImage}
             />
         );
     }
@@ -434,6 +435,17 @@ class App extends Component {
             selected: subject,
             view: ViewState.subject,
         }, this.applyCriteria);
+    };
+
+    handleNextImage = (direction) => {
+        var links = this.state.filtered || this.props.linksQuery.links;
+        var index = links.indexOf(this.state.selected);
+        index += direction;
+        if(index >= links.length){ index = 0; }
+        if(index < 0){ index = links.length - 1; }
+        this.setState({
+            selected: links[index]
+        });
     };
 
 }
