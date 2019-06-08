@@ -5,7 +5,9 @@ import SubjectMenu from './subjectMenu';
 export default class FilterForm extends React.Component {
     constructor(props){
         super(props);
-        var subject = this.props.subjects[0].id;
+        var subject = this.props.subjects.length > 0
+	    ? this.props.subjects[0].id
+	    : null;
         var type = "image";
         var do_subject = false;
         var do_type = (!!this.props.forceType);
