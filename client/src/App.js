@@ -401,10 +401,9 @@ class App extends Component {
     }
 
     renderSubjects(){
-        const subjects = this.props.subjectsQuery.subjects;
         return (
             <SubjectsView
-                subjects={subjects}
+                subjects={this.props.subjectsQuery.subjects}
                 createSubject={this.createSubject}
                 onClick={this.handleClickSubject}
             />
