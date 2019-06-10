@@ -4,21 +4,20 @@ export default class SubjectsView extends React.Component{
     constructor(props){
         super(props);
         var subjects = this.props.subjects;
-        subjects.sort((a,b)=>{ return ('' + a.name).localeCompare(b.name); });
         this.state = {
             newSubjectName: '',
             subjects: subjects,
         };
     }
 
-    handleInput = event => {
-        this.setState({newSubjectName: event.target.value});
-    }
-
-    handleKeyDown = event => {
-        if(event.key === 'Enter'){
-            this.props.createSubject({name:this.state.newSubjectName});
+    componentDidMount(){
+        var subjects = this.state.subjects;
+        if(subjects){
+            subjects.sort((a,b)=>{
+                return ('' + a.name).localeCompare(b.name);
+            });
         }
+        this.setState({subjects: subjects});
     }
 
     renderSubject(subject){
@@ -46,14 +45,15 @@ export default class SubjectsView extends React.Component{
     render(){
         return(
             <div id="subjects-view" className="padded-content">
-                <input
-                    type="text"
-                    placeholder="new"
-                    onKeyDown={this.handleKeyDown}
-                    onChange={this.handleInput}
-                />
                 <div>
-                    {this.props.subjects.map(subject => this.renderSubject(subject))}
+                    {
+                    this.state.subjects
+                    ?
+                    this.state.subjects.map(
+                        subject => this.renderSubject(subject)
+                    )
+                    : null
+                    }
                     {this.renderSubject({id:0, name:"no subject"})}
                 </div>
             </div>

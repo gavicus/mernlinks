@@ -9,6 +9,7 @@ import SubjectsView from './subjectsView';
 import SubjectView from './subjectView';
 import FilterForm from './filterForm';
 import CreateForm from './createform';
+import CreateSubjectForm from './createSubject';
 
 const ViewState = {list:0, edit:1, gallery:2, image:3, subjects:4, subject:5};
 
@@ -183,7 +184,13 @@ class App extends Component {
                 const data = store.readQuery({query: SubjectsQuery});
                 data.subjects.unshift(createSubject);
                 store.writeQuery({query: SubjectsQuery, data});
+                this.setState({activeModal: null});
+                this.handleClickSubject(createSubject.id);
             },
+            refetchQueries: [{
+                query: SubjectsQuery,
+                variables: {name}
+            }],
         });
     };
 
@@ -214,6 +221,7 @@ class App extends Component {
         var links = this.state.filtered || this.props.linksQuery.links;
         if(btnText === "filter"){ return this.toggleModal(btnText); }
         if(btnText === "new link"){ return this.toggleModal(btnText); }
+        if(btnText === "new subject"){ return this.toggleModal(btnText); }
         if(btnText === "edit"){
             return this.handleClickEdit(this.state.selected);
         }
@@ -234,14 +242,6 @@ class App extends Component {
             var subjectObj = this.props.subjectsQuery.subjects.find(
                 s => s.name === subjectName
             );
-            //var criteria = {
-            //    subject: subjectObj.id,
-            //    type: "image",
-            //};
-            //this.setState({
-            //    view: ViewState.gallery,
-            //    criteria: criteria,
-            //}, this.applyCriteria);
             this.handleClickSubject(subjectObj.id);
             return;
         }
@@ -335,6 +335,9 @@ class App extends Component {
         if(this.state.view === ViewState.list
             || this.state.view === ViewState.gallery
         ){ navs.push("new link"); }
+        if(this.state.view === ViewState.subjects){
+            navs.push("new subject");
+        }
 
         return (
             <div id="wrapper">
@@ -405,6 +408,11 @@ class App extends Component {
                     defaultType: "image",
                 };
                 return ( <CreateForm {...args} /> );
+            case "new subject":
+                args = {
+                    submit: this.handleNewSubject
+                };
+                return ( <CreateSubjectForm {...args} /> );
             default: return null;
         }
     }
@@ -471,6 +479,10 @@ class App extends Component {
             />
         );
     }
+
+    handleNewSubject = name => {
+        this.createSubject({name: name});
+    };
 
     handleSubjectEditSubmit = subject => {
         this.changeSubject(subject);

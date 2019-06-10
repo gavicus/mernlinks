@@ -77,7 +77,7 @@ const resolvers = {
     createSubject: async (_, {name}) => {
         const subject = new Subject({name});
         await subject.save();
-        return link;
+        return subject;
     },
     changeSubject: async (_, {id, name, thumburl}) => {
         await Subject.findByIdAndUpdate(id, {name, thumburl});
