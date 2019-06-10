@@ -101,6 +101,7 @@ class App extends Component {
                 data.links.unshift(createLink);
                 store.writeQuery({query: LinksQuery, data});
                 this.setState({activeModal: null});
+                this.handleClickEdit(createLink);
             },
             refetchQueries: [{
                 query: LinksQuery,
