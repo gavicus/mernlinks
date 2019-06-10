@@ -34,6 +34,10 @@ export default class SubjectView extends React.Component {
         this.props.handleClickEdit(link);
     };
 
+    handleDeleteSubject = event => {
+        this.props.handleDelete();
+    };
+
     render(){
         return (
             <div className="subject-view">
@@ -80,6 +84,17 @@ export default class SubjectView extends React.Component {
                         <button onClick={this.handleSubmit}>submit</button>
                     </div>
                     : null
+                }
+
+                {
+                this.state.subject
+                ?
+                <button
+                    onClick={this.handleDeleteSubject}
+                >
+                    delete subject
+                </button>
+                : null
                 }
 
                 <GalleryView

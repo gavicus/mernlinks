@@ -49,6 +49,7 @@ const typeDefs = `
     createLink(url: String!, type: String!): Link
     changeLink(id: ID!, url: String!, type: String!, subjects: [SubjectInput], thumburl: String): Boolean
     removeLink(id: ID!): Boolean
+    removeSubject(id: ID!): Boolean
     createSubject(name: String!): Subject
     changeSubject(id: ID!, name: String!, thumburl: String): Boolean
   }
@@ -72,6 +73,10 @@ const resolvers = {
     },
     removeLink: async (_, {id}) => {
         await Link.findByIdAndRemove(id);
+        return true;
+    },
+    removeSubject: async (_, {id}) => {
+        await Subject.findByIdAndRemove(id);
         return true;
     },
     createSubject: async (_, {name}) => {

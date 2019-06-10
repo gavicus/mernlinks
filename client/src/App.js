@@ -75,6 +75,12 @@ const RemoveLinkMutation = gql`
     }
 `;
 
+const RemoveSubjectMutation = gql`
+    mutation($id: ID!) {
+        removeSubject(id: $id)
+    }
+`;
+
 
 class App extends Component {
     constructor(props){
@@ -168,8 +174,34 @@ class App extends Component {
             },
             update: store => {
                 const data = store.readQuery({query: LinksQuery});
-                this.props.linksQuery.links = data.links.filter(x => x.id !== link.id);
+                this.props.linksQuery.links = data.links.filter(
+                    x => x.id !== link.id
+                );
                 store.writeQuery({query: LinksQuery, data});
+            },
+        });
+    };
+
+    removeSubject = async subject => {
+        await this.props.removeSubject({
+            variables: {
+                id: subject.id,
+            },
+            update: store => {
+                const data = store.readQuery({query: SubjectsQuery});
+                this.props.subjectsQuery.subjects = data.subjects.filter(
+                    x => x.id !== subject.id
+                );
+                store.writeQuery({query: SubjectsQuery, data});
+                this.applyCriteria();
+                
+                console.log(
+                    'removeSubject update',
+                    data.subjects.map(s=>s.id),
+                    this.props.subjectsQuery.subjects.map(s=>s.id),
+                    subject.id
+                );
+
             },
         });
     };
@@ -209,6 +241,13 @@ class App extends Component {
         const link = this.state.selected;
         this.removeLink(link);
         this.handleClickList();
+    };
+
+    handleDeleteSubject = event => {
+        const subject = this.state.selected;
+        this.removeSubject(subject);
+        this.setState({ criteria:{} }, this.applyCriteria);
+        this.setState({view: ViewState.subjects});
     };
 
     handleEditSubmit = updatedLink => {
@@ -477,6 +516,7 @@ class App extends Component {
                 submit={this.handleSubjectEditSubmit}
                 click={this.handleGalleryClick}
                 handleClickEdit={this.handleClickEdit}
+                handleDelete={this.handleDeleteSubject}
             />
         );
     }
@@ -528,6 +568,7 @@ export default compose(
     graphql(CreateLinkMutation, {name: "createLink"}),
     graphql(UpdateLinkMutation, {name: "changeLink"}),
     graphql(RemoveLinkMutation, {name: "removeLink"}),
+    graphql(RemoveSubjectMutation, {name: "removeSubject"}),
     graphql(CreateSubjectMutation, {name: "createSubject"}),
     graphql(SubjectsQuery, {name: "subjectsQuery"}),
     graphql(UpdateSubjectMutation, {name: "changeSubject"}),
