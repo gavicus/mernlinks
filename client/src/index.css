@@ -212,7 +212,7 @@ nav button {
 
 .list-view-content {
     position:absolute;
-    top: 100px;
+    top: 40px;
     left:0px;
     right:0px;
     bottom:0px;
@@ -298,5 +298,23 @@ img.small-view {
 }
 .wide-thumb:hover .vid-edit-btn {
     visibility: visible;
+}
+
+#full-page-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(200,200,200,0.5);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#modal-form {
+    width: 300px;
+    height: 50px;
 }
 

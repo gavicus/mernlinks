@@ -1,5 +1,4 @@
 import React from 'react';
-import CreateForm from './createform';
 
 export default class ListView extends React.Component{
     linkDisplay(link){
@@ -17,9 +16,6 @@ export default class ListView extends React.Component{
     render(){
         return (
             <div className="list-view padded-content">
-                <div className={"list-view-top"}>
-                    <CreateForm submit={this.props.createLink} defaultType={"image"} />
-                </div>
                 <div className={"list-view-content"}>
                     <ul className="form-list">
                     {

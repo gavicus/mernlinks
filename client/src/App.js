@@ -8,6 +8,7 @@ import ImageView from './imageView';
 import SubjectsView from './subjectsView';
 import SubjectView from './subjectView';
 import FilterForm from './filterForm';
+import CreateForm from './createform';
 
 const ViewState = {list:0, edit:1, gallery:2, image:3, subjects:4, subject:5};
 
@@ -82,6 +83,7 @@ class App extends Component {
             selected: null,
             criteria: null,
             filtered: null,
+            activeModal: null,
         };
     }
 
@@ -98,6 +100,7 @@ class App extends Component {
                 const data = store.readQuery({query: LinksQuery});
                 data.links.unshift(createLink);
                 store.writeQuery({query: LinksQuery, data});
+                this.setState({activeModal: null});
             },
             refetchQueries: [{
                 query: LinksQuery,
@@ -208,9 +211,10 @@ class App extends Component {
     handleNav = btnText => {
         var index;
         var links = this.state.filtered || this.props.linksQuery.links;
+        if(btnText === "filter"){ return this.toggleModal(btnText); }
+        if(btnText === "new link"){ return this.toggleModal(btnText); }
         if(btnText === "edit"){
-            this.handleClickEdit(this.state.selected);
-            return;
+            return this.handleClickEdit(this.state.selected);
         }
         if(btnText === "next"){
             index = links.indexOf(this.state.selected) + 1;
@@ -324,6 +328,10 @@ class App extends Component {
             }
             navClass = "image-view";
         }
+
+        navs.push("filter");
+        navs.push("new link");
+
         return (
             <div id="wrapper">
                 <div className="nav-wrapper">
@@ -336,20 +344,22 @@ class App extends Component {
                         ))
                     }
                     </nav>
-                    {
-                        this.state.view === ViewState.image
-                        ? null
-                        :
-                        <FilterForm
-                            subjects={this.props.subjectsQuery.subjects}
-                            onChange={this.handleFilter}
-                            criteria={this.state.criteria}
-                        />
-                    }
                 </div>
                 <main>
                     {this.getPageMarkup()}
                 </main>
+
+                {
+                this.state.activeModal
+                ?
+                <div id="full-page-blur">
+                    <div id="modal-form">
+                        {this.renderModalForm()}
+                    </div>
+                </div>
+                : null
+                }
+
             </div>
         );
     }
@@ -364,6 +374,35 @@ class App extends Component {
                 subjects={this.props.subjectsQuery.subjects}
             />
         );
+    }
+
+    toggleModal(formName){
+        if(this.state.activeModal){
+            this.setState({activeModal: null});
+        }
+        else {
+            this.setState({activeModal: formName});
+        }
+    }
+
+    renderModalForm(){
+        var args;
+        switch(this.state.activeModal){
+            case "filter":
+                args = {
+                    subjects: this.props.subjectsQuery.subjects,
+                    onChange: this.handleFilter,
+                    criteria: this.state.criteria,
+                }
+                return ( <FilterForm {...args} /> );
+            case "new link":
+                args = {
+                    submit: this.createLink,
+                    defaultType: "image",
+                };
+                return ( <CreateForm {...args} /> );
+            default: return null;
+        }
     }
 
     renderEdit(){
