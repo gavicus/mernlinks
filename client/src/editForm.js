@@ -8,7 +8,9 @@ export default class EditForm extends React.Component{
         super(props);
         this.state = {
             link: this.props.link,
-            subjectToAdd: this.props.subjects[0].id,
+            subjectToAdd: this.props.subjects.length > 0
+		? this.props.subjects[0].id
+		: null,
         };
     }
 

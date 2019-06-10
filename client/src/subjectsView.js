@@ -44,7 +44,6 @@ export default class SubjectsView extends React.Component{
     }
 
     render(){
-        var subjects = this.state.subjects;
         return(
             <div id="subjects-view" className="padded-content">
                 <input
@@ -54,7 +53,7 @@ export default class SubjectsView extends React.Component{
                     onChange={this.handleInput}
                 />
                 <div>
-                    {subjects.map(subject => this.renderSubject(subject))}
+                    {this.props.subjects.map(subject => this.renderSubject(subject))}
                     {this.renderSubject({id:0, name:"no subject"})}
                 </div>
             </div>

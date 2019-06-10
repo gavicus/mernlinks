@@ -4,7 +4,9 @@ export default class SubjectMenu extends React.Component {
     constructor(props){
         super(props);
         var subjects = this.getFiltered();
-        var selected = subjects[0].id;
+        var selected = subjects.length > 0
+	    ? subjects[0].id
+	    : null;
         this.state = {
             subjects: subjects,
             selected: selected
