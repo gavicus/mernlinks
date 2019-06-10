@@ -328,9 +328,12 @@ class App extends Component {
             }
             navClass = "image-view";
         }
-
-        navs.push("filter");
-        navs.push("new link");
+        if(this.state.view !== ViewState.subjects
+            && this.state.view !== ViewState.image
+        ){ navs.push("filter"); }
+        if(this.state.view === ViewState.list
+            || this.state.view === ViewState.gallery
+        ){ navs.push("new link"); }
 
         return (
             <div id="wrapper">
