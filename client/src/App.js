@@ -80,7 +80,7 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            view: ViewState.list,
+            view: ViewState.subjects,
             selected: null,
             criteria: null,
             filtered: null,
@@ -334,6 +334,7 @@ class App extends Component {
         ){ navs.push("filter"); }
         if(this.state.view === ViewState.list
             || this.state.view === ViewState.gallery
+            || this.state.view === ViewState.subjects
         ){ navs.push("new link"); }
         if(this.state.view === ViewState.subjects){
             navs.push("new subject");
