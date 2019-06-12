@@ -227,6 +227,7 @@ class App extends Component {
     };
 
     handleClickEdit = link => {
+        console.log('handleClickEdit',link);
         this.setState({
             selected: link,
             view: ViewState.edit,
@@ -359,7 +360,11 @@ class App extends Component {
         if(loading){ return null; }
 
         var navClass = "";
-        var navs = ["list","gallery","subjects"];
+        var navs = [
+            "list",
+            //"gallery",
+            "subjects"
+        ];
         if(this.state.view === ViewState.image){
             navs.push("edit");
             var subjects = this.state.selected.subjects;

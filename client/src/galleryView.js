@@ -24,6 +24,7 @@ export default class GalleryView extends React.Component {
             <div className="gallery-wrapper">
                 <PageGallery
                     links={this.props.links}
+                    clickEdit={this.clickEdit}
                 />
                 <VideoGallery
                     links={this.props.links}

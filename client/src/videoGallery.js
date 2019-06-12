@@ -29,7 +29,11 @@ export default class VideoGallery extends React.Component{
                 {
                 links.map(link => 
                     <div className="wide-thumb" key={link.id}>
-                        <a href={link.url}>
+                        <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             {
                             link.thumburl
                             ? <img src={link.thumburl} alt="video thumbnail" />
