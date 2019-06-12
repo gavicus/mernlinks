@@ -1,4 +1,5 @@
 import React from 'react';
+import './subjectView.css';
 import CreateForm from './createform';
 import GalleryView from './galleryView';
 
@@ -38,62 +39,100 @@ export default class SubjectView extends React.Component {
         this.props.handleDelete();
     };
 
-    render(){
-        return (
-            <div className="subject-view">
-                <div>
+    renderNameRow(){
+        return(
+            <div class="row">
+                <div className="form-box">
                     {
-                        this.state.subject
-                        ? this.state.subject.name
-                        : "no subject"
+                    this.state.subject
+                    ? <span>
+                        subject:<br/>
+                        {this.state.subject.name}
+                    </span>
+                    : <span>"no subject"</span>
                     }
                 </div>
                     
-                {
-                this.props.subject
-                ?
-                <input
-                    type="text"
-                    value={this.state.subject.name}
-                    onChange={this.handleNameChange}
-                />
-                : null
-                }
-
-                {
+                <div className="form-box">
+                    {
                     this.props.subject
                     ?
-                    <div>
-                        {
-                        this.props.subject.thumburl
-                        ?
-                        <img
-                            alt="link thumbnail"
-                            className="thumbnail"
-                            src={this.state.subject.thumburl}
-                        />
-                        :null
-                        }
-                        <CreateForm
-                            title="thumbnail image"
-                            placeholder="thumb url"
-                            defaultType="image"
-                            hideType={true}
-                            submit={this.handleAddThumb}
-                        />
-                        <button onClick={this.handleSubmit}>submit</button>
-                    </div>
+                    <input
+                        type="text"
+                        value={this.state.subject.name}
+                        onChange={this.handleNameChange}
+                    />
                     : null
-                }
+                    }
+                </div>
+            </div>
+        );
+    }
+
+    renderThumbRow(){
+        if( this.props.subject ){
+            return(
+                <div className="row">
+                    {this.renderSubjectThumb()}
+                    {this.renderThumbForm()}
+                    <br/>
+                </div>
+            );
+        }
+        return null;
+    }
+
+    renderSubjectThumb(){
+        if( this.props.subject.thumburl ){
+            return (
+                <div className="form-box">
+                    <img
+                        alt="link thumbnail"
+                        className="thumbnail"
+                        src={this.state.subject.thumburl}
+                    />
+                </div>
+            );
+        }
+        return null;
+    }
+
+    renderThumbForm(){
+        return(
+            <div className="form-box">
+                <CreateForm
+                    title="thumbnail image"
+                    placeholder="thumb url"
+                    defaultType="image"
+                    hideType={true}
+                    submit={this.handleAddThumb}
+                />
+            </div>
+        );
+    }
+
+    render(){
+        return (
+            <div className="subject-view">
+                {this.renderNameRow()}
+                {this.renderThumbRow()}
 
                 {
                 this.state.subject
                 ?
-                <button
-                    onClick={this.handleDeleteSubject}
-                >
-                    delete subject
-                </button>
+                <div>
+                    <button
+                        onClick={this.handleSubmit}
+                        style={{marginRight:"5px"}}
+                    >
+                        submit
+                    </button>
+                    <button
+                        onClick={this.handleDeleteSubject}
+                    >
+                        delete subject
+                    </button>
+                </div>
                 : null
                 }
 

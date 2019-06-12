@@ -102,12 +102,13 @@ button:hover {
 
 .gallery-title {
     padding: 3px;
-    background-color: gray;
+    background-color: #aaa;
     color: white;
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;
     display: inline-block;
+    width: 100%;
 }
 
 .gallery-content {
