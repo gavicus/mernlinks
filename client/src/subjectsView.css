@@ -12,3 +12,25 @@
     padding: 0 2px;
     border-radius: 50%
 }
+
+.subject-thumbnail .subject-thumb {
+    border: 1px solid #ddd;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+}
+
+.subject-thumbnail .subject-thumb img{
+    max-width: 90px;
+    max-height: 90px;
+}
+
+.subject-thumbnail .subject-name {
+    font-size: 10px;
+    border: 1px solid #ddd;
+    width: 58px;
+    height: 30px;
+    padding: 1px;
+    word-wrap: break-word;
+    display: flex;
+}

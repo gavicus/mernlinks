@@ -205,27 +205,6 @@ div.column {
     overflow: hidden;
 }
 
-.subject-thumbnail .subject-thumb {
-    border: 1px solid #ddd;
-    width: 60px;
-    height: 60px;
-    overflow: hidden;
-}
-
-.subject-thumbnail .subject-thumb img{
-    max-width: 90px;
-    max-height: 90px;
-}
-
-.subject-thumbnail .subject-name {
-    border: 1px solid #ddd;
-    width: 58px;
-    height: 30px;
-    padding: 1px;
-    word-wrap: break-word;
-    display: flex;
-}
-
 .subject-view {
     margin-top: 30px;
     padding: 10px;
