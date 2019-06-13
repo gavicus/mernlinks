@@ -107,8 +107,17 @@ class App extends Component {
                 const data = store.readQuery({query: LinksQuery});
                 data.links.unshift(createLink);
                 store.writeQuery({query: LinksQuery, data});
+
+                if(this.state.view === ViewState.subject){
+                    var subject = this.state.selected;
+                    createLink.subjects = [subject];
+                    this.changeLink(createLink);
+                }
+                else{
+                    this.handleClickEdit(createLink);
+                }
+
                 this.setState({activeModal: null});
-                this.handleClickEdit(createLink);
             },
             refetchQueries: [{
                 query: LinksQuery,
@@ -141,7 +150,11 @@ class App extends Component {
                         : x
                 );
                 store.writeQuery({query: LinksQuery, data});
-            }
+            },
+            refetchQueries: [{
+                query: LinksQuery,
+                variables: ['url','type','subjects']
+            }],
         });
     };
 
@@ -386,6 +399,7 @@ class App extends Component {
         if(this.state.view === ViewState.list
             || this.state.view === ViewState.gallery
             || this.state.view === ViewState.subjects
+            || this.state.view === ViewState.subject
         ){ navs.push("new link"); }
         if(this.state.view === ViewState.subjects){
             navs.push("new subject");
