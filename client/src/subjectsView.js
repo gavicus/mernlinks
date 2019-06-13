@@ -1,4 +1,5 @@
 import React from 'react';
+import './subjectsView.css';
 
 export default class SubjectsView extends React.Component{
     constructor(props){
@@ -20,6 +21,19 @@ export default class SubjectsView extends React.Component{
         this.setState({subjects: subjects});
     }
 
+    countLinksOfSubject(subject){
+        var count = 0;
+        for(var link of this.props.links){
+            for(var s of link.subjects){
+                if( subject.name === s.name ){
+                    ++count;
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
     renderSubject(subject){
         return(
             <div
@@ -28,6 +42,9 @@ export default class SubjectsView extends React.Component{
                 className="subject-thumbnail"
             >
                 <div className="subject-thumb">
+                    <div className="links-count">
+                        {this.countLinksOfSubject(subject)}
+                    </div>
                     {
                     subject.thumburl
                     ? <img

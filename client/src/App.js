@@ -520,6 +520,7 @@ class App extends Component {
     renderSubjects(){
         return (
             <SubjectsView
+                links={this.props.linksQuery.links}
                 subjects={this.props.subjectsQuery.subjects}
                 createSubject={this.createSubject}
                 onClick={this.handleClickSubject}
