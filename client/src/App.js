@@ -207,7 +207,10 @@ class App extends Component {
                 store.writeQuery({query: SubjectsQuery, data});
                 this.applyCriteria();
             },
-            refetchQueries: () => ['SubjectsQuery'],
+            refetchQueries: () => [{
+                query: SubjectsQuery,
+                variables: [{id: true}]
+            }],
         });
     };
 
