@@ -118,12 +118,13 @@ class App extends Component {
     };
 
     changeLink = async link => {
+	var subjects = link.subjects || [];
         await this.props.changeLink({
             variables: {
                 id: link.id,
                 url: link.url,
                 type: link.type,
-                subjects: link.subjects.map(s=>({id:s.id, name:s.name})),
+                subjects: subjects.map(s=>({id:s.id, name:s.name})),
                 thumburl: link.thumburl,
             },
             update: store => {
