@@ -368,9 +368,9 @@ class App extends Component {
 
         var navClass = "";
         var navs = [
-            "list",
             //"gallery",
-            "subjects"
+            "subjects",
+            "list",
         ];
         if(this.state.view === ViewState.image){
             navs.push("edit");
