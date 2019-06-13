@@ -47,7 +47,16 @@ export default class SubjectView extends React.Component {
                     this.state.subject
                     ? <span>
                         subject:<br/>
-                        {this.state.subject.name}
+                        <span
+                            className="copy-name"
+                            onClick={
+                                ()=>navigator.clipboard.writeText(
+                                    this.state.subject.name
+                                )
+                            }
+                        >
+                            {this.state.subject.name}
+                        </span>
                     </span>
                     : <span>"no subject"</span>
                     }
