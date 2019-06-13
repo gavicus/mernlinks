@@ -41,7 +41,7 @@ export default class SubjectView extends React.Component {
 
     renderNameRow(){
         return(
-            <div class="row">
+            <div className="row">
                 <div className="form-box">
                     {
                     this.state.subject

@@ -184,6 +184,17 @@ class App extends Component {
     };
 
     removeSubject = async subject => {
+        // first remove this subject from all links
+        var links = this.props.linksQuery.links;
+        for(var link of links){
+            while(true){
+                var index = link.subjects.find(x=>x.name===subject.name);
+                if(index===undefined){ break; }
+                link.subjects.splice(index,1);
+            }
+            this.changeLink(link);
+        }
+        // remove the subject from the database
         await this.props.removeSubject({
             variables: {
                 id: subject.id,
@@ -195,15 +206,8 @@ class App extends Component {
                 );
                 store.writeQuery({query: SubjectsQuery, data});
                 this.applyCriteria();
-                
-                console.log(
-                    'removeSubject update',
-                    data.subjects.map(s=>s.id),
-                    this.props.subjectsQuery.subjects.map(s=>s.id),
-                    subject.id
-                );
-
             },
+            refetchQueries: () => ['SubjectsQuery'],
         });
     };
 
@@ -228,7 +232,6 @@ class App extends Component {
     };
 
     handleClickEdit = link => {
-        console.log('handleClickEdit',link);
         this.setState({
             selected: link,
             view: ViewState.edit,
