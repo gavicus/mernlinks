@@ -38,7 +38,9 @@ export default class PageGallery extends React.Component {
     }
 
     render(){
-        const links = this.props.links.filter(link=>link.type==="page");
+        const links = this.props.links
+            ? this.props.links.filter(link => link.type === "page")
+            : [];
         return(
             links.length === 0
             ? ''

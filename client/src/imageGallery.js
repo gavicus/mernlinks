@@ -10,7 +10,9 @@ export default class ImageGallery extends React.Component {
     };
 
     render(){
-        const links = this.props.links.filter(link=>link.type==="image");
+        const links = this.props.links
+            ? this.props.links.filter(link=>link.type==="image")
+            : [];
         return(
             links.length === 0
             ? ''

@@ -35,8 +35,9 @@ export default class CreateForm extends React.Component{
     handlePaste = event => {
         navigator.clipboard.readText()
             .then(text=>{
-                this.setState({url: text});
-                this.props.submit(this.state);
+                this.setState({url: text},
+                    ()=>this.props.submit(this.state)
+                );
             })
     };
 

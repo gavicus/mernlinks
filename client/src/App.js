@@ -91,13 +91,13 @@ class App extends Component {
             criteria: null,
             filtered: null,
             activeModal: null,
+            subjectLinks: null,
         };
     }
 
     createLink = async formData => {
         const url = formData.url;
         const type = formData.type;
-        const subjects = [];
         await this.props.createLink({
             variables: {
                 url,
@@ -121,7 +121,7 @@ class App extends Component {
             },
             refetchQueries: [{
                 query: LinksQuery,
-                variables: {url,type,subjects}
+                variables: ['url','type','subjects']
             }],
         });
     };
@@ -529,16 +529,9 @@ class App extends Component {
     }
 
     renderSubject(){
-        var links;
-        if(this.state.selected){
-            links = this.state.filtered || this.props.linksQuery.links;
-        }
-        else {
-            links = this.props.linksQuery.links.filter(k => (!k.subjects) || k.subjects.length === 0);
-        }
         return (
             <SubjectView
-                links={links}
+                links={this.state.subjectLinks}
                 subject={this.state.selected}
                 submit={this.handleSubjectEditSubmit}
                 click={this.handleGalleryClick}
@@ -555,6 +548,15 @@ class App extends Component {
     handleSubjectEditSubmit = subject => {
         this.changeSubject(subject);
         this.handleClickList();
+    };
+
+    updateSubjectLinks = () => {
+        var links = this.props.linksQuery.links;
+        var subject = this.state.selected;
+        links = links.filter(
+            k => !!k.subjects.find(s => s.name === subject.name)
+        );
+        this.setState({subjectLinks: links});
     };
 
     handleClickSubject = subjectId => {
@@ -575,7 +577,7 @@ class App extends Component {
             criteria: criteria,
             selected: subject,
             view: ViewState.subject,
-        }, this.applyCriteria);
+        }, this.updateSubjectLinks);
     };
 
     handleNextImage = (direction) => {

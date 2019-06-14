@@ -15,7 +15,9 @@ export default class VideoGallery extends React.Component{
     };
 
     render(){
-        const links = this.props.links.filter(link=>link.type==="video");
+        const links = this.props.links
+            ? this.props.links.filter(link=>link.type==="video")
+            : [];
         return(
             links.length === 0
             ? ''
