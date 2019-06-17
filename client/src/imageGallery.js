@@ -3,6 +3,7 @@ import React from 'react';
 export default class ImageGallery extends React.Component {
     state={
         visible: true,
+	thumbSize: 120,
     };
 
     toggleContent = () => {
@@ -28,6 +29,7 @@ export default class ImageGallery extends React.Component {
                     key={link.id}
                     onClick={()=>this.props.click(link)}
                     className={"thumbnail"}
+		    style={{width:this.state.thumbSize, height: this.state.thumbSize}}
                 >
                     <img src={link.url} alt="thumb"/>
                 </div>

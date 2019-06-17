@@ -73,6 +73,18 @@ button:hover {
     overflow: hidden;
     display: inline-block;
     margin-bottom: -3px;
+    cursor: pointer;
+}
+
+.thumbnail img {
+    height: 150%;
+    width: 150%;
+    margin-left: -20%;
+    margin-top: -10%;
+}
+
+.thumbnail:hover {
+    box-shadow: inset 0px 0px 80px rgba(255,255,200,0.5);
 }
 
 .wide-thumb {
@@ -115,11 +127,6 @@ button:hover {
     margin: 10px 0;
 }
 
-.thumbnail img {
-    height: 100%;
-    width: auto;
-}
-
 nav {
     margin-left: 10px;
 }
@@ -146,6 +153,7 @@ nav.image-view {
 
 nav button {
     margin-right: 5px;
+    height: 30px;
 }
 
 .padded-content {
@@ -246,12 +254,17 @@ img.small-view {
     background: rgba(200,200,200,0.5);
     z-index: 4;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: center;
 }
 
 #modal-form {
     width: 300px;
-    height: 50px;
+    height: 70px;
+    margin-top: 30px;
+}
+
+#modal-form button {
+    height: 40px;
 }
 
