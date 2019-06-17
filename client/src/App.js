@@ -553,9 +553,16 @@ class App extends Component {
     updateSubjectLinks = () => {
         var links = this.props.linksQuery.links;
         var subject = this.state.selected;
-        links = links.filter(
-            k => !!k.subjects.find(s => s.name === subject.name)
-        );
+        if(subject){
+            links = links.filter(
+                k => !!k.subjects.find(s => s.name === subject.name)
+            );
+        }
+        else{
+            links = links.filter(
+                k => !k.subjects || k.subjects.length === 0
+            );
+        }
         this.setState({subjectLinks: links});
     };
 
