@@ -16,7 +16,7 @@
     height: 100%;
     width: 60px;
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     top: 0px;
 }
 .image-view .image-nav.prev {
