@@ -254,7 +254,7 @@ img.small-view {
     background: rgba(200,200,200,0.5);
     z-index: 4;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
 }
 
