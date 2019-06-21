@@ -403,14 +403,19 @@ class App extends Component {
         ];
         if(this.state.view === ViewState.image){
             navs.push("edit");
+            navClass = "image-view";
+        }
+        if(this.state.view === ViewState.image
+		|| this.state.view === ViewState.edit
+	){
             var subjects = this.state.selected.subjects;
             for(var s of subjects){
                 navs.push("subject: " + s.name);
             }
-            navClass = "image-view";
-        }
+	}
         if(this.state.view !== ViewState.subjects
             && this.state.view !== ViewState.image
+            && this.state.view !== ViewState.edit
         ){ navs.push("filter"); }
         if(this.state.view === ViewState.list
             || this.state.view === ViewState.gallery
