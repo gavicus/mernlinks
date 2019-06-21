@@ -6,6 +6,7 @@ mongoose.connect("mongodb://localhost/test");
 const Subject = mongoose.model("Subject", {
     name: String,
     thumburl: String,
+    thumbstyle: String,
 });
 
 const Link = mongoose.model("Link", {
@@ -13,6 +14,7 @@ const Link = mongoose.model("Link", {
     type: String,
     subjects: [Subject.schema],
     thumburl: String,
+    thumbstyle: String,
 });
 
 const typeDefs = `
@@ -25,11 +27,13 @@ const typeDefs = `
     id: ID!
     name: String!
     thumburl: String
+    thumbstyle: String
   }
   input SubjectInput {
     id: ID!
     name: String!
     thumburl: String
+    thumbstyle: String
   }
   type Link {
     id: ID!
@@ -37,6 +41,7 @@ const typeDefs = `
     type: String!
     subjects: [Subject]
     thumburl: String
+    thumbstyle: String
   }
   input LinkInput {
     id: ID!
@@ -44,14 +49,15 @@ const typeDefs = `
     type: String!
     subjects: [SubjectInput]
     thumburl: String
+    thumbstyle: String
   }
   type Mutation {
     createLink(url: String!, type: String!): Link
-    changeLink(id: ID!, url: String!, type: String!, subjects: [SubjectInput], thumburl: String): Boolean
+    changeLink(id: ID!, url: String!, type: String!, subjects: [SubjectInput], thumburl: String, thumbstyle: String): Boolean
     removeLink(id: ID!): Boolean
     removeSubject(id: ID!): Boolean
     createSubject(name: String!): Subject
-    changeSubject(id: ID!, name: String!, thumburl: String): Boolean
+    changeSubject(id: ID!, name: String!, thumburl: String, thumbstyle: String): Boolean
   }
 `;
 
@@ -67,8 +73,8 @@ const resolvers = {
         await link.save();
         return link;
     },
-    changeLink: async (_, {id, url, type, subjects, thumburl}) => {
-        await Link.findByIdAndUpdate(id, {url, type, subjects, thumburl});
+    changeLink: async (_, {id, url, type, subjects, thumburl, thumbstyle}) => {
+        await Link.findByIdAndUpdate(id, {url, type, subjects, thumburl, thumbstyle});
         return true;
     },
     removeLink: async (_, {id}) => {
@@ -84,8 +90,8 @@ const resolvers = {
         await subject.save();
         return subject;
     },
-    changeSubject: async (_, {id, name, thumburl}) => {
-        await Subject.findByIdAndUpdate(id, {name, thumburl});
+    changeSubject: async (_, {id, name, thumburl, thumbstyle}) => {
+        await Subject.findByIdAndUpdate(id, {name, thumburl, thumbstyle});
         return true;
     },
   }
