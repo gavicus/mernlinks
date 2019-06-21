@@ -94,6 +94,7 @@ export default class EditForm extends React.Component{
                                 defaultType="image"
                                 hideType={true}
                                 submit={this.handleAddThumb}
+				show="image"
                             />
                         </li>
                         <li><button onClick={this.handleSubmit}>submit</button></li>
