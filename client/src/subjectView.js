@@ -115,6 +115,7 @@ export default class SubjectView extends React.Component {
                     defaultType="image"
                     hideType={true}
                     submit={this.handleAddThumb}
+                    show="image"
                 />
             </div>
         );

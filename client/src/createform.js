@@ -1,5 +1,4 @@
 import React from 'react';
-import TypeMenu from './typemenu';
 
 /*
 props:
@@ -7,7 +6,6 @@ props:
     submit: function
     defaultType: string
     placeholder: string
-    hideType: boolean
 */
 
 export default class CreateForm extends React.Component{
@@ -19,6 +17,12 @@ export default class CreateForm extends React.Component{
             url: ''
         };
     }
+
+    show = typeName => {
+        if(!this.props.show){ return true; }
+        if(this.props.show.indexOf(typeName) > -1){ return true; }
+        return false;
+    };
 
     handleTypeChange = event => {
         this.setState({type: event.target.value});
@@ -41,23 +45,51 @@ export default class CreateForm extends React.Component{
             })
     };
 
+	handlePasteVideo = event => {
+	navigator.clipboard.readText()
+	    .then(text=>{
+		this.setState(
+		    {
+			url: text,
+			type: "video",
+		    },
+		    ()=>this.props.submit(this.state)
+		);
+	    });
+	};
+
+    handlePastePage = event => {
+        navigator.clipboard.readText()
+            .then(text=>{
+                this.setState(
+                    {
+                        url: text,
+                        type: "page",
+                    },
+                    ()=>this.props.submit(this.state)
+                );
+            });
+    };
+
     render(){
-        const {type,url} = this.state;
-        const placeholder = this.props.placeholder || "new url";
         return(
             <div className="little-form">
                 <div className="form-title">
                     {this.props.title || "create new link"}
                 </div>
                 <div className="spaced-row">
-                    <button onClick={this.handlePaste}>paste</button>
-                    <input placeholder={placeholder} value={url} onChange={this.handleUrlChange} />
-                    {
-                        this.props.hideType
-                        ? null
-                        : <TypeMenu onChange={this.handleTypeChange} value={type} />
+                    {this.show("image")
+                    ? <button onClick={this.handlePaste}>paste image</button>
+                    : null
                     }
-                    <button onClick={this.handleSubmit}>submit</button>
+                    {this.show("video")
+                    ? <button onClick={this.handlePasteVideo}>paste video</button>
+                    : null
+                    }
+                    {this.show("page")
+                    ? <button onClick={this.handlePastePage}>paste page</button>
+                    : null
+                    }
                 </div>
             </div>
         );

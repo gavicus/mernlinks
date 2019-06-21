@@ -112,6 +112,13 @@ class App extends Component {
                     var subject = this.state.selected;
                     createLink.subjects = [subject];
                     this.changeLink(createLink);
+
+			if(createLink.type === "video"){
+				this.setState(
+					{selected:createLink},
+					()=>this.handleNav("edit")
+				);
+			}
                 }
                 else{
                     this.handleClickEdit(createLink);
@@ -273,7 +280,16 @@ class App extends Component {
 
     handleEditSubmit = updatedLink => {
         this.changeLink(updatedLink);
-        this.handleClickList();
+	    var subjects = updatedLink.subjects;
+	    if(subjects && subjects.length > 0){
+		    this.setState(
+			    {selected: subjects[0]},
+			    ()=>this.handleNav("subject")
+		    );
+	    }
+	    else {
+		    this.handleNav("subjects");
+	    }
     };
 
     handleNav = btnText => {
@@ -547,7 +563,7 @@ class App extends Component {
 
     handleSubjectEditSubmit = subject => {
         this.changeSubject(subject);
-        this.handleClickList();
+        this.handleNav("subjects");
     };
 
     updateSubjectLinks = () => {
