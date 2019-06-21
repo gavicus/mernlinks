@@ -68,8 +68,8 @@ button:hover {
 }
 
 .thumbnail {
-    width: 30px;
-    height: 30px;
+    width: 60px;
+    height: 60px;
     overflow: hidden;
     display: inline-block;
     margin-bottom: -3px;

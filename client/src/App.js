@@ -409,6 +409,7 @@ class App extends Component {
 		|| this.state.view === ViewState.edit
 	){
             var subjects = this.state.selected.subjects;
+		if(!subjects || subjects.length==0){ return; }
             for(var s of subjects){
                 navs.push("subject: " + s.name);
             }

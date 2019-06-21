@@ -94,10 +94,9 @@ export default class SubjectView extends React.Component {
     renderSubjectThumb(){
         if( this.props.subject.thumburl ){
             return (
-                <div className="form-box">
+                <div className="thumbnail">
                     <img
                         alt="link thumbnail"
-                        className="thumbnail"
                         src={this.state.subject.thumburl}
                     />
                 </div>
