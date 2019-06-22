@@ -2,6 +2,7 @@ import React from 'react';
 import './subjectView.css';
 import CreateForm from './createform';
 import GalleryView from './galleryView';
+import Thumbnail from './thumbnail';
 
 export default class SubjectView extends React.Component {
     constructor(props){
@@ -13,6 +14,12 @@ export default class SubjectView extends React.Component {
 
     handleSubmit = event => {
         this.props.submit(this.state.subject);
+    };
+
+    handleStyleChange = event => {
+        var subject = this.state.subject;
+        subject.thumbstyle = event.target.value;
+        this.setState({subject: subject}, this.handleSubmit);
     };
 
     handleAddThumb = event => {
@@ -84,6 +91,7 @@ export default class SubjectView extends React.Component {
                 <div className="row">
                     {this.renderSubjectThumb()}
                     {this.renderThumbForm()}
+                    {this.renderStyleMenu()}
                     <br/>
                 </div>
             );
@@ -94,12 +102,11 @@ export default class SubjectView extends React.Component {
     renderSubjectThumb(){
         if( this.props.subject.thumburl ){
             return (
-                <div className="thumbnail">
-                    <img
-                        alt="link thumbnail"
-                        src={this.state.subject.thumburl}
-                    />
-                </div>
+                <Thumbnail
+                    src={this.state.subject.thumburl}
+                    thumbstyle={this.state.subject.thumbstyle}
+                    size={80}
+                />
             );
         }
         return null;
@@ -117,6 +124,20 @@ export default class SubjectView extends React.Component {
                     show="image"
                 />
             </div>
+        );
+    }
+
+    renderStyleMenu(){
+        var styles = ["", "top", "left", "top-close"];
+        return(
+            <select
+                onChange={this.handleStyleChange}
+                value={this.state.subject.thumbstyle}
+            >
+                {styles.map(s =>
+                    <option key={s} value={s}>{s}</option>
+                )}
+            </select>
         );
     }
 

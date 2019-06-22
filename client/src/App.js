@@ -24,6 +24,7 @@ const LinksQuery = gql`
                 name
             }
             thumburl
+            thumbstyle
         }
     }
 `;
@@ -34,6 +35,7 @@ const SubjectsQuery = gql`
             id
             name
             thumburl
+            thumbstyle
         }
     }
 `;
@@ -58,14 +60,20 @@ const CreateSubjectMutation = gql`
 `;
 
 const UpdateLinkMutation = gql`
-    mutation($id: ID!, $url: String!, $type: String!, $subjects: [SubjectInput], $thumburl: String){
-        changeLink(id: $id, url: $url, type: $type, subjects: $subjects, thumburl: $thumburl)
+    mutation(
+        $id: ID!, $url: String!, $type: String!, $subjects: [SubjectInput],
+        $thumburl: String, $thumbstyle: String
+    ){
+        changeLink(
+            id: $id, url: $url, type: $type, subjects: $subjects,
+            thumburl: $thumburl, thumbstyle: $thumbstyle
+        )
     }
 `;
 
 const UpdateSubjectMutation = gql`
-    mutation($id: ID!, $name: String!, $thumburl: String){
-        changeSubject(id: $id, name: $name, thumburl: $thumburl)
+    mutation($id: ID!, $name: String!, $thumburl: String, $thumbstyle: String){
+        changeSubject(id: $id, name: $name, thumburl: $thumburl, thumbstyle: $thumbstyle)
     }
 `;
 
@@ -134,7 +142,7 @@ class App extends Component {
     };
 
     changeLink = async link => {
-	var subjects = link.subjects || [];
+        var subjects = link.subjects || [];
         await this.props.changeLink({
             variables: {
                 id: link.id,
@@ -142,6 +150,7 @@ class App extends Component {
                 type: link.type,
                 subjects: subjects.map(s=>({id:s.id, name:s.name})),
                 thumburl: link.thumburl,
+                thumbstyle: link.thumbstyle,
             },
             update: store => {
                 const data = store.readQuery({query: LinksQuery});
@@ -153,6 +162,7 @@ class App extends Component {
                             type: link.type,
                             subjects: link.subjects,
                             thumburl: link.thumburl,
+                            thumbstyle: link.thumbstyle,
                         }
                         : x
                 );
@@ -171,6 +181,7 @@ class App extends Component {
                 id: subject.id,
                 name: subject.name,
                 thumburl: subject.thumburl,
+                thumbstyle: subject.thumbstyle,
             },
             update: store => {
                 const data = store.readQuery({query: SubjectsQuery});
@@ -180,6 +191,7 @@ class App extends Component {
                             ...subject,
                             name: subject.name,
                             thumburl: subject.thumburl,
+                            thumbstyle: subject.thumbstyle,
                         }
                         : x
                 );
@@ -408,8 +420,8 @@ class App extends Component {
         if(this.state.view === ViewState.image
 		|| this.state.view === ViewState.edit
 	){
-            var subjects = this.state.selected.subjects;
-		if(!subjects || subjects.length==0){ return; }
+        var subjects = this.state.selected.subjects;
+		if(!subjects || subjects.length===0){ return; }
             for(var s of subjects){
                 navs.push("subject: " + s.name);
             }

@@ -1,5 +1,6 @@
 import React from 'react';
 import './subjectsView.css';
+import Thumbnail from './thumbnail';
 
 export default class SubjectsView extends React.Component{
     constructor(props){
@@ -47,10 +48,11 @@ export default class SubjectsView extends React.Component{
                     </div>
                     {
                     subject.thumburl
-                    ? <img
+                    ? <Thumbnail
                         src={subject.thumburl}
-                        alt="subject thumbnail"
-                      />
+                        thumbstyle={subject.thumbstyle}
+                        size={80}
+                    />
                     : null
                     }
                 </div>
